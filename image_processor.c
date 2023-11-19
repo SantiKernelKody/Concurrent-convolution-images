@@ -71,7 +71,7 @@ void *process_segment(void *args)
     byte *pInpSegment = thread_arg->img->data + start_row * nW;
     byte *pOutSegment = thread_arg->out_img->data + start_row * nW;
 
-    FrameConv3x3(pInpSegment, pOutSegment, nW, num_rows, thread_arg->filter_matrix, thread_arg->filter_denom);
+    FrameConv3x3(pInpSegment, pOutSegment, nW, num_rows + 2, thread_arg->filter_matrix, thread_arg->filter_denom);
 
     return NULL;
 }
@@ -137,11 +137,9 @@ int main(int argc, char *argv[])
     {
         perror("Failed to allocate memory for output image data");
         free(input_image->data);
-        free(input_image->filename);
         free(input_image);
         free(output_image);
         free(output_image->data);
-        free(output_image->filename);
         return EXIT_FAILURE;
     }
 
@@ -176,9 +174,9 @@ int main(int argc, char *argv[])
     // Cleanup
     free(input_image->data);
     free(input_image);
-    free(input_image->filename);
+    // free(input_image->filename);
     free(output_image->data);
-    free(output_image->filename);
+    // free(output_image->filename);
     free(output_image);
 
     return 0;
