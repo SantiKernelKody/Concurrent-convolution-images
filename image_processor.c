@@ -71,11 +71,7 @@ void *process_segment(void *args)
     byte *pInpSegment = thread_arg->img->data + start_row * nW;
     byte *pOutSegment = thread_arg->out_img->data + start_row * nW;
 
-    for (int i = start_row; i < start_row + num_rows && i < thread_arg->img->height - 1; ++i)
-    {
-        conv_index = i * nW;
-        FrameConv3x3(pInpSegment + conv_index, pOutSegment + conv_index, nW, thread_arg->img->height, thread_arg->filter_matrix, thread_arg->filter_denom);
-    }
+    FrameConv3x3(pInpSegment, pOutSegment, nW, num_rows, thread_arg->filter_matrix, thread_arg->filter_denom);
 
     return NULL;
 }
@@ -161,6 +157,7 @@ int main(int argc, char *argv[])
         thread_args[i].filter_denom = filter_denom;
         thread_args[i].start_row = i * rows_per_thread;
         thread_args[i].num_rows = (i == MAX_THREADS - 1) ? rows_per_thread + input_image->height % MAX_THREADS : rows_per_thread;
+        // process_segment(&thread_args[i]);
         pthread_create(&processing_threads[i], NULL, process_segment, &thread_args[i]);
     }
 
