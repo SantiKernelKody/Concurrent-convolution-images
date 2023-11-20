@@ -11,9 +11,6 @@ void sharp_matrix(int coef[], int n);
 void top_sobel_matrix(int coef[], int n);
 void blur_matrix(int coef[], int n);
 
-// Global definitions and types
-#define MAX_THREADS 4 // Assuming we have 4 CPUs for simplicity
-
 typedef enum
 {
     SOBEL,
@@ -85,6 +82,65 @@ void *write_image_async(void *args)
     free(filename);
     return NULL;
 }
+void menu()
+{
+    while (1)
+    {
+        int opcion;
+        char input_image[256];
+        char output_image[256];
+        printf("====================================\n");
+        printf("     Generador de Filtros\n");
+        printf("====================================\n");
+
+        printf("Elige el tipo de filtro que deseas aplicar:\n");
+        printf("1. Sobel\n");
+        printf("2. Blur\n");
+        printf("3. Sharpen\n");
+        printf("4. Salir\n");
+
+        printf("Introduce tu opción: ");
+        scanf("%d", &opcion);
+
+        // Limpiar el buffer de entrada (stdin) para evitar errores en la entrada
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF)
+        {
+        }
+
+        switch (opcion)
+        {
+        case 1:
+            printf("Has seleccionado el filtro Sobel.\n");
+            // Lógica para el filtro Sobel
+            break;
+        case 2:
+            printf("Has seleccionado el filtro Blur.\n");
+            // Lógica para el filtro Blur
+            break;
+        case 3:
+            printf("Has seleccionado el filtro Sharpen.\n");
+            // Lógica para el filtro Sharpen
+            break;
+        case 4:
+            printf("Saliendo del programa.\n");
+            // return 0; // Salir del programa
+        default:
+            printf("Opción no válida, por favor intenta de nuevo.\n\n");
+            continue; // Continuar con el siguiente ciclo del bucle
+        }
+
+        printf("Introduce el nombre del archivo de imagen de entrada: ");
+        scanf("%s", input_image);
+
+        printf("Introduce el nombre del archivo de imagen de salida: ");
+        scanf("%s", output_image);
+
+        // Procesar la imagen con el filtro seleccionado y los nombres de archivo proporcionados.
+
+        // Agrega aquí el código necesario para aplicar el filtro y guardar la imagen.
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -94,6 +150,8 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Filter types: sobel, blur, sharpen\n");
         return EXIT_FAILURE;
     }
+
+    long MAX_THREADS = sysconf(_SC_NPROCESSORS_ONLN);
 
     // Parse filter type from command line
     int filter_matrix[9];
@@ -122,10 +180,10 @@ int main(int argc, char *argv[])
 
     // Read the image asynchronously
     pthread_t read_thread;
-    Image *input_image = malloc(sizeof(Image));
-    input_image->filename = strdup(argv[2]);
+    Image *input_image;
     pthread_create(&read_thread, NULL, read_image_async, argv[2]);
-    pthread_join(read_thread, (void **)&input_image);
+    pthread_join(read_thread, (void **)&input_image); // Este metodo ya se le separa la memoria a input image entonces verificar como hacer para no separar 2 veces
+    input_image->filename = strdup(argv[2]);
 
     // Prepare output image
     Image *output_image = malloc(sizeof(Image));
@@ -171,12 +229,10 @@ int main(int argc, char *argv[])
     pthread_create(&write_thread, NULL, write_image_async, output_image);
     pthread_join(write_thread, NULL);
 
-    // Cleanup
+    // Free memory
     free(input_image->data);
     free(input_image);
-    // free(input_image->filename);
     free(output_image->data);
-    // free(output_image->filename);
     free(output_image);
 
     return 0;

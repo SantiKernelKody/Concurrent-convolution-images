@@ -91,9 +91,9 @@ void blur_matrix(int coef[], int n)
 	coef[1] = 0;
 	coef[2] = 0;
 	// second row
-	coef[3] = 0;
+	coef[3] = -1;
 	coef[4] = 1;
-	coef[5] = 0;
+	coef[5] = -1;
 	// third row
 	coef[6] = 0;
 	coef[7] = 0;
