@@ -3,6 +3,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <time.h>
+
 typedef unsigned char byte;
 int ReadPGM(char *file_name, byte **ppImg, int *pnWidth, int *pnHeight);
 void WritePGM(char *file_name, byte *pImg, int nWidth, int nHeight);
@@ -82,65 +84,6 @@ void *write_image_async(void *args)
     free(filename);
     return NULL;
 }
-void menu()
-{
-    while (1)
-    {
-        int opcion;
-        char input_image[256];
-        char output_image[256];
-        printf("====================================\n");
-        printf("     Generador de Filtros\n");
-        printf("====================================\n");
-
-        printf("Elige el tipo de filtro que deseas aplicar:\n");
-        printf("1. Sobel\n");
-        printf("2. Blur\n");
-        printf("3. Sharpen\n");
-        printf("4. Salir\n");
-
-        printf("Introduce tu opción: ");
-        scanf("%d", &opcion);
-
-        // Limpiar el buffer de entrada (stdin) para evitar errores en la entrada
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF)
-        {
-        }
-
-        switch (opcion)
-        {
-        case 1:
-            printf("Has seleccionado el filtro Sobel.\n");
-            // Lógica para el filtro Sobel
-            break;
-        case 2:
-            printf("Has seleccionado el filtro Blur.\n");
-            // Lógica para el filtro Blur
-            break;
-        case 3:
-            printf("Has seleccionado el filtro Sharpen.\n");
-            // Lógica para el filtro Sharpen
-            break;
-        case 4:
-            printf("Saliendo del programa.\n");
-            // return 0; // Salir del programa
-        default:
-            printf("Opción no válida, por favor intenta de nuevo.\n\n");
-            continue; // Continuar con el siguiente ciclo del bucle
-        }
-
-        printf("Introduce el nombre del archivo de imagen de entrada: ");
-        scanf("%s", input_image);
-
-        printf("Introduce el nombre del archivo de imagen de salida: ");
-        scanf("%s", output_image);
-
-        // Procesar la imagen con el filtro seleccionado y los nombres de archivo proporcionados.
-
-        // Agrega aquí el código necesario para aplicar el filtro y guardar la imagen.
-    }
-}
 
 int main(int argc, char *argv[])
 {
@@ -151,7 +94,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    long MAX_THREADS = sysconf(_SC_NPROCESSORS_ONLN);
+    long MAX_THREADS = sysconf(_SC_NPROCESSORS_ONLN) - 1;
 
     // Parse filter type from command line
     int filter_matrix[9];
@@ -205,6 +148,9 @@ int main(int argc, char *argv[])
     pthread_t processing_threads[MAX_THREADS];
     ThreadArg thread_args[MAX_THREADS];
     int rows_per_thread = input_image->height / MAX_THREADS;
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
     for (int i = 0; i < MAX_THREADS; ++i)
     {
         thread_args[i].img = input_image;
@@ -216,12 +162,17 @@ int main(int argc, char *argv[])
         // process_segment(&thread_args[i]);
         pthread_create(&processing_threads[i], NULL, process_segment, &thread_args[i]);
     }
+    end = clock();
 
+    // Calcular el tiempo total utilizado
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Tiempo total de procesamiento de la convolución: %f segundos\n", cpu_time_used);
     // Wait for all processing to complete
     for (int i = 0; i < MAX_THREADS; ++i)
     {
         pthread_join(processing_threads[i], NULL);
     }
+    // Detener el cronómetro
 
     // Write the image asynchronously
     pthread_t write_thread;
