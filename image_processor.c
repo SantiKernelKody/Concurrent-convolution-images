@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     pthread_t read_thread;
     Image *input_image;
     pthread_create(&read_thread, NULL, read_image_async, argv[2]);
-    pthread_join(read_thread, (void **)&input_image); // Este metodo ya se le separa la memoria a input image entonces verificar como hacer para no separar 2 veces
+    pthread_join(read_thread, (void **)&input_image);
     input_image->filename = strdup(argv[2]);
 
     // Prepare output image
@@ -163,16 +163,13 @@ int main(int argc, char *argv[])
         pthread_create(&processing_threads[i], NULL, process_segment, &thread_args[i]);
     }
     end = clock();
-
-    // Calcular el tiempo total utilizado
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Tiempo total de procesamiento de la convolución: %f segundos\n", cpu_time_used);
+    printf("Convolutional process timing: %f seconds\n", cpu_time_used);
     // Wait for all processing to complete
     for (int i = 0; i < MAX_THREADS; ++i)
     {
         pthread_join(processing_threads[i], NULL);
     }
-    // Detener el cronómetro
 
     // Write the image asynchronously
     pthread_t write_thread;
