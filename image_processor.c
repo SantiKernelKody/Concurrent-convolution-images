@@ -180,6 +180,7 @@ int main(int argc, char *argv[])
     {
         pthread_join(processing_threads[i], NULL);
     }
+
     // Mutex destroy
     // pthread_mutex_destroy(&mutex);
     // Write the image asynchronously
