@@ -91,7 +91,7 @@ void *read_image_async(void *args)
     byte *buffer;
     if (ReadPGM(filename, &buffer, &img->width, &img->height) != 0)
     {
-        fprintf(stderr, "Failed to read image from %s\n. Please verify the filename.", filename);
+        fprintf(stderr, "Failed to read image from %s. Please verify the filename.\n", filename);
         free(img);
         return NULL;
     }
