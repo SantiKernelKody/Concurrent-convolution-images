@@ -28,11 +28,16 @@ int ReadPGM(char *file_name, byte **ppImg, int *pnWidth, int *pnHeight)
 
     fgets(buf, 510, pInpFile); // "width height"
     sscanf(buf, "%d %d", pnWidth, pnHeight);
+    printf("File:%s\n", file_name);
     printf("width=%d height=%d\n", *pnWidth, *pnHeight);
 
     fgets(buf, 510, pInpFile); // "MaxColor"
 
     *ppImg = malloc((*pnWidth) * (*pnHeight));
+    if (ppImg == NULL)
+    {
+        return 1;
+    }
 
     fread(*ppImg, 1, (*pnWidth) * (*pnHeight), pInpFile);
 
