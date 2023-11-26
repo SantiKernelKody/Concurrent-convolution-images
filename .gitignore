@@ -1,0 +1,5 @@
+# Ignorar archivos objeto
+*.o
+
+# Ignorar el ejecutable
+image_processor
