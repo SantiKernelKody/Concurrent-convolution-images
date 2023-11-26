@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include "pgm.h"
+extern pthread_mutex_t mutex;
 
 //=======================================================================================
 int FrameConv3x3(byte *pInp, byte *pOut, int nW, int nH, int conv[9], int denom)
@@ -49,7 +50,9 @@ int FrameConv3x3(byte *pInp, byte *pOut, int nW, int nH, int conv[9], int denom)
 
 			if (res > 255)
 				res = 255;
+			// pthread_mutex_lock(&mutex);
 			pOut[j + nW * i] = res;
+			// pthread_mutex_unlock(&mutex);
 		}
 	}
 	return 0;

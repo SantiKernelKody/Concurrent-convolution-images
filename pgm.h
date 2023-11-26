@@ -10,10 +10,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 //=======================================================================================
 typedef unsigned char byte;
-
 //=======================================================================================
 int ReadPGM(char *file_name, byte **ppImg, int *pnWidth, int *pnHeight)
 {

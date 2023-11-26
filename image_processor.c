@@ -1,11 +1,14 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sched.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <time.h>
 
 typedef unsigned char byte;
+pthread_mutex_t mutex;
 int ReadPGM(char *file_name, byte **ppImg, int *pnWidth, int *pnHeight);
 void WritePGM(char *file_name, byte *pImg, int nWidth, int nHeight);
 int FrameConv3x3(byte *pInp, byte *pOut, int nW, int nH, int conv[9], int denom);
@@ -120,6 +123,8 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Invalid filter type. Use 'sobel', 'blur', or 'sharpen'.\n");
         return EXIT_FAILURE;
     }
+    // Mutex init
+    // pthread_mutex_init(&mutex, NULL);
 
     // Read the image asynchronously
     pthread_t read_thread;
@@ -151,6 +156,7 @@ int main(int argc, char *argv[])
     clock_t start, end;
     double cpu_time_used;
     start = clock();
+    cpu_set_t cpuset;
     for (int i = 0; i < MAX_THREADS; ++i)
     {
         thread_args[i].img = input_image;
@@ -161,6 +167,10 @@ int main(int argc, char *argv[])
         thread_args[i].num_rows = (i == MAX_THREADS - 1) ? rows_per_thread + input_image->height % MAX_THREADS : rows_per_thread;
         // process_segment(&thread_args[i]);
         pthread_create(&processing_threads[i], NULL, process_segment, &thread_args[i]);
+        CPU_ZERO(&cpuset);
+        CPU_SET(i % MAX_THREADS, &cpuset);
+
+        pthread_setaffinity_np(processing_threads[i], sizeof(cpu_set_t), &cpuset);
     }
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -170,7 +180,8 @@ int main(int argc, char *argv[])
     {
         pthread_join(processing_threads[i], NULL);
     }
-
+    // Mutex destroy
+    // pthread_mutex_destroy(&mutex);
     // Write the image asynchronously
     pthread_t write_thread;
     output_image->filename = argv[3];
