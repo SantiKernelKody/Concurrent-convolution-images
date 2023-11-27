@@ -50,9 +50,10 @@ After starting the program, you will be prompted to enter the names of the image
 4. **Output Files**:
 The processed images will be generated in the same folder as the executable. The output files will follow the format `<filename>_<filter_applied>_result.pgm` Ejm:.
     #### Original Image
-    ![Original image](resources/lenna.pgm)
+    <img src="resources/lenna.png" width="512" height="512" alt="Original image">
+
     #### Sobel Filtered Image
-    ![Sobel Filtered Image](resources/lenna_sobel_result.pgm)
+    <img src="resources/lenna_sobel_result.png" width="512" height="512" alt="Sobel Filtered Image">
 
 ## Author
 
