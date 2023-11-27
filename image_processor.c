@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
         if (file_just_name == NULL)
         {
             fprintf(stderr, "Failed to process the filename\n");
-            return 1;
+            continue;
         }
 
         int out_filename_size = strlen(file_just_name) + strlen(temp->filter) + strlen("_result.pgm") + 2; // +2 for the underscores and null terminator
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
             free(output_image);
             printf("Failed to allocate memory for output_file_name\n");
             fprintf(stderr, "Failed to allocate memory for output_file_name\n");
-            return 1;
+            continue;
         }
 
         output_image->filename = strdup(output_file_name);
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
             free(input_image);
             free(output_image);
             free(output_image->data);
-            return 1;
+            continue;
         }
         // Process the image using threads
         pthread_t processing_threads[MAX_THREADS];
