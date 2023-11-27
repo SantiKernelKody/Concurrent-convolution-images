@@ -16,27 +16,43 @@ This project focuses on optimizing operating system efficiency through concurren
 
 ### Prerequisites
 
-- [Insert any prerequisites or dependencies here]
+- Linux kernel >=2.6 or compatible with thread affinity
+- Library libc6-dev
 
-### Installation
 
-[Provide installation instructions if applicable]
+### Compilation
 
-### Usage
+1. **Build the Executable**:
+   To compile the program and generate the executable file, run the following command in the terminal:
 
-[Explain how to use your project]
+    ```$ make```
 
-## Contributing
+### Running the Program
 
-Contributions are welcome! If you'd like to contribute to this project, please follow the [Contribution Guidelines](CONTRIBUTING.md).
+2. **Execute the Program**:
+Once compiled, you can run the program using the command:
 
-## License
+    ```$ ./image_processor```
+3. **Input Images and Filters**:
+After starting the program, you will be prompted to enter the names of the images (in `.pgm` format) and the filters you wish to apply to each image. The available filters are `sobel`, `blur`, and `sharpen`.
 
-This project is licensed under the [License Name] - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-[Insert any acknowledgments or credits here]
+    ``` 
+    ========  Image Processor Program  ========
+    Enter image filename ('quit' to exit): lenna.pgm  
+    Enter filter type (sobel, blur, sharpen): sobel
+    Enter image filename ('quit' to exit): pepper.pgm
+    Enter filter type (sobel, blur, sharpen): sobel
+    Enter image filename ('quit' to exit): pato.pgm
+    Enter filter type (sobel, blur, sharpen): blur
+    Enter image filename ('quit' to exit): tank.pgm
+    Enter filter type (sobel, blur, sharpen): sobel
+    Enter image filename ('quit' to exit): quit ```
+4. **Output Files**:
+The processed images will be generated in the same folder as the executable. The output files will follow the format `<filename>_<filter_applied>_result.pgm` Ejm:.
+    #### Original Image
+    ![Original image](resources/lenna.pgm)
+    #### Sobel Filtered Image
+    ![Sobel Filtered Image](resources/lenna_sobel_result.pgm)
 
 ## Author
 
