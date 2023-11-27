@@ -20,10 +20,6 @@ int FrameConv3x3(byte *pInp, byte *pOut, int nW, int nH, int conv[9], int denom)
 	int res;
 	int denom2 = (denom + 1) / 2;
 
-	// for(i=0; i<9; i++) printf("%d ", conv[i]);
-	// printf("\n");
-	// printf("%d  %d", nW, nH);
-
 	for (i = 1; i < (nH - 1); i++) // rows
 	{
 		i1m = i - 1;

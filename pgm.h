@@ -38,11 +38,8 @@ int ReadPGM(char *file_name, byte **ppImg, int *pnWidth, int *pnHeight)
     {
         return 1;
     }
-
     fread(*ppImg, 1, (*pnWidth) * (*pnHeight), pInpFile);
-
     fclose(pInpFile);
-
     return 0;
 }
 

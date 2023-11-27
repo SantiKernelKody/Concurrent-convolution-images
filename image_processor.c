@@ -1,4 +1,6 @@
+// Require for thread affinity
 #define _GNU_SOURCE
+// Headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
